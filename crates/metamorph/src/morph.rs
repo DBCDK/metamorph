@@ -78,10 +78,7 @@ where
   let mut order: Vec<u64> = vec![];
 
   for deploy_set in config.deploy_sets {
-    if !jobs.contains_key(&deploy_set.order) {
-      order.push(deploy_set.order);
-      jobs.insert(deploy_set.order, vec![]);
-    }
+    jobs.entry(deploy_set.order).or_insert_with(|| {order.push(deploy_set.order); vec![]});
     jobs
       .get_mut(&deploy_set.order)
       .expect("failed to get deploy_set from jobs map with order {order}")
