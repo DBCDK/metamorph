@@ -1,0 +1,18 @@
+# SPDX-FileCopyrightText: 2024 Christina Sørensen
+#
+# SPDX-License-Identifier: EUPL-1.2
+
+[workspace]
+resolver = "2"
+members = ["crates/*", "crates/workspace-hack"]
+
+[workspace.package]
+version = "0.0.1"
+edition = "2021"
+rust-version = "1.80"
+
+[workspace.metadata.crane]
+name = "metamorph"
+
+[workspace.dependencies]
+workspace-hack = { version = "0.1", path = "./crates/workspace-hack" }

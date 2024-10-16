@@ -1,0 +1,30 @@
+# SPDX-FileCopyrightText: 2024 Christina Sørensen
+#
+# SPDX-License-Identifier: EUPL-1.2
+
+[package]
+name = "metamorph"
+version.workspace = true
+edition.workspace = true
+license = "EUPL-1.2"
+author = "Christina Sørensen <christina@cafkakf.com"
+rust-version = "1.81"
+
+[dependencies]
+clap = { version = "4.5.19", features = ["cargo"] }
+clap_complete = "4.5.32"
+clap_mangen = "0.2.23"
+fast_log = "1.7.4"
+futures = "0.3.31"
+log = { version = "0.4.22", features = ["std", "kv_unstable"] }
+pretty_env_logger = "0.5.0"
+serde = { version = "1.0.210", features = ["derive", "serde_derive"] }
+serde_norway = "0.9.38"
+tokio = { version = "1.40.0", features = ["full"] }
+workspace-hack = { version = "0.1", path = "../workspace-hack" }
+
+[build-dependencies]
+log = "0.4.22"
+clap = { version = "4.5.19", features = ["cargo"] }
+clap_complete = "4.5.32"
+clap_mangen = "0.2.23"
