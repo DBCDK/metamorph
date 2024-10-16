@@ -2,6 +2,7 @@
 // SPDX-FileContributor: Christina Sørensen
 //
 // SPDX-License-Identifier: EUPL-1.2
+#![allow(clippy::async_yields_async)]
 
 use futures::future::join_all;
 use futures::Future;
@@ -29,7 +30,7 @@ fn morph_command() -> &'static str {
 async fn morph_action<I, S>(
   command: &str,
   deployment: String,
-  args: I,
+  _args: I,
 ) -> impl Future<Output = tokio::io::Result<Output>>
 where
   I: IntoIterator<Item = S> + std::marker::Send + Clone,
@@ -77,10 +78,7 @@ where
   let mut order: Vec<u64> = vec![];
 
   for deploy_set in config.deploy_sets {
-    if !jobs.contains_key(&deploy_set.order) {
-      order.push(deploy_set.order);
-      jobs.insert(deploy_set.order, vec![]);
-    }
+    jobs.entry(deploy_set.order).or_insert_with(|| {order.push(deploy_set.order); vec![]});
     jobs
       .get_mut(&deploy_set.order)
       .expect("failed to get deploy_set from jobs map with order {order}")
