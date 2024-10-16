@@ -18,9 +18,9 @@ publish = false
 
 ### BEGIN HAKARI SECTION
 [dependencies]
-log = { version = "0.4", default-features = false, features = ["std"] }
+log = { version = "0.4", default-features = false, features = ["kv_unstable", "std"] }
 
 [build-dependencies]
-log = { version = "0.4", default-features = false, features = ["std"] }
+log = { version = "0.4", default-features = false, features = ["kv_unstable", "std"] }
 
 ### END HAKARI SECTION
