@@ -30,7 +30,7 @@ fn morph_command() -> &'static str {
 async fn morph_action<I, S>(
   command: &str,
   deployment: String,
-  args: I,
+  _args: I,
 ) -> impl Future<Output = tokio::io::Result<Output>>
 where
   I: IntoIterator<Item = S> + std::marker::Send + Clone,
