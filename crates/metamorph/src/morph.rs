@@ -2,6 +2,7 @@
 // SPDX-FileContributor: Christina Sørensen
 //
 // SPDX-License-Identifier: EUPL-1.2
+#![allow(clippy::async_yields_async)]
 
 use futures::future::join_all;
 use futures::Future;
