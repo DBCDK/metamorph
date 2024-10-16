@@ -7,7 +7,10 @@
 use futures::future::join_all;
 use futures::Future;
 use std::process::Output;
-use std::{collections::BTreeMap, ffi::OsStr};
+use std::{
+  collections::{BTreeMap, BTreeSet},
+  ffi::OsStr,
+};
 use tokio::{process::Command, task::JoinHandle};
 
 use crate::data::{Config, DeploySet};
@@ -74,12 +77,11 @@ where
   // jobs has order as key
   let mut jobs: BTreeMap<u64, Vec<JoinHandle<_>>> = BTreeMap::new();
 
-  // vec of encountered orderings (kinda eww tbh)
-  let mut order: Vec<u64> = vec![];
+  let mut order: BTreeSet<u64> = BTreeSet::new();
 
   for deploy_set in config.deploy_sets {
     jobs.entry(deploy_set.order).or_insert_with(|| {
-      order.push(deploy_set.order);
+      order.insert(deploy_set.order);
       vec![]
     });
     jobs
@@ -88,9 +90,8 @@ where
       .append(&mut foreach_host(action, args.clone(), deploy_set).await)
   }
 
-  order.sort();
-
   for step in order {
+    log::trace!("Running ordering step: {step}");
     let commands = join_all(
       jobs
         .get_mut(&step)
