@@ -14,6 +14,7 @@ pub fn build_cli() -> Command {
     // Global top-level args
     .arg(arg!(-c --config [config] "Specify config file").global(true))
     .arg(arg!(-v --verbose ... "Verbosity level.").global(true))
+    .arg(arg!(--impure "Don't clear host environemnt variables from morph invocatins").global(true))
     .arg(Arg::new("keepresults").global(true).long("keep-results").action(ArgAction::SetTrue).help("Keep latest build in .gcroots to prevent it from being garbage collected"))
     .arg(
       arg!(--passcmd [passcmd] "Set password manager command")

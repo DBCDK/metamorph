@@ -12,6 +12,7 @@ mod morph;
 use std::{io::Error, sync::OnceLock};
 
 static DRY_RUN: OnceLock<bool> = OnceLock::new();
+static IMPURE: OnceLock<bool> = OnceLock::new();
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {
@@ -41,6 +42,16 @@ async fn main() -> Result<(), Error> {
     DRY_RUN
       .set(false)
       .expect("failed to set DRY_RUN OnceLock to false");
+  }
+
+  if matches.get_flag("impure") {
+    IMPURE
+      .set(true)
+      .expect("failed to set IMPURe OnceLock to true");
+  } else {
+    IMPURE
+      .set(false)
+      .expect("failed to set IMPURE OnceLock to false");
   }
 
   let mut args: Vec<String> = vec![];
