@@ -6,7 +6,9 @@
 
 use futures::future::join_all;
 use futures::Future;
+use indicatif::{MultiProgress, ProgressBar};
 use std::process::Output;
+use std::time::Duration;
 use std::{
   collections::{BTreeMap, BTreeSet},
   ffi::OsStr,
@@ -14,6 +16,9 @@ use std::{
 use tokio::{process::Command, task::JoinHandle};
 
 use crate::data::{Config, DeploySet};
+
+/// A u64 ordering of a deployment_set
+type Order = u64;
 
 const MORPH_COMMAND: &str = "morph";
 const DRY_RUN_COMMAND: &str = "echo";
@@ -74,28 +79,34 @@ where
   I: IntoIterator<Item = S> + std::marker::Send + Clone + 'static,
   S: AsRef<OsStr> + 'static,
 {
-  // jobs has order as key
-  let mut jobs: BTreeMap<u64, Vec<JoinHandle<_>>> = BTreeMap::new();
+  let bars = MultiProgress::new();
+  let mut jobs: BTreeMap<Order, Vec<JoinHandle<_>>> = BTreeMap::new();
 
-  let mut order: BTreeSet<u64> = BTreeSet::new();
+  let mut seen_orderings: BTreeSet<Order> = BTreeSet::new();
 
   for deploy_set in config.deploy_sets {
+    bars.add({
+      let pb = ProgressBar::new_spinner();
+      pb.enable_steady_tick(Duration::from_millis(100));
+      pb
+    });
     jobs.entry(deploy_set.order).or_insert_with(|| {
-      order.insert(deploy_set.order);
+      seen_orderings.insert(deploy_set.order);
       vec![]
     });
+
     jobs
       .get_mut(&deploy_set.order)
       .expect("failed to get deploy_set from jobs map with order {order}")
       .append(&mut foreach_host(action, args.clone(), deploy_set).await)
   }
 
-  for step in order {
-    log::trace!("Running ordering step: {step}");
+  for order in seen_orderings {
+    log::trace!("Running ordeing order: {order}");
     let commands = join_all(
       jobs
-        .get_mut(&step)
-        .expect("failed to get order {step} from jobs"),
+        .get_mut(&order)
+        .expect("failed to get order {order} from jobs"),
     )
     .await
     .into_iter()
