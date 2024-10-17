@@ -8,21 +8,35 @@ use clap::{arg, command, crate_authors, Arg, ArgAction, ArgMatches, Command};
 pub fn build_cli() -> Command {
   command!()
     .author(crate_authors!("\n"))
+    // Local top-level args
     .arg(arg!([host_set] "A set of hosts").required(false))
-    .arg(arg!(-c --config [config] "Specify config file"))
     .arg(arg!(--example "Generate example config file"))
-    .arg(arg!(-v --verbose ... "Verbosity level."))
-    .arg(arg!(--passcmd [passcmd] "Set password manager command"))
-    .subcommand(
-      Command::new("push")
-        .about("push out changes to hostgroup")
-        .arg(arg!(-l --list "lists test values").action(ArgAction::SetTrue)),
+    // Global top-level args
+    .arg(arg!(-c --config [config] "Specify config file").global(true))
+    .arg(arg!(-v --verbose ... "Verbosity level.").global(true))
+    .arg(Arg::new("keepresults").global(true).long("keep-results").action(ArgAction::SetTrue).help("Keep latest build in .gcroots to prevent it from being garbage collected"))
+    .arg(
+      arg!(--passcmd [passcmd] "Set password manager command")
+        .global(true)
+        .conflicts_with("passfile"),
+    )
+    .arg(
+      arg!(--passfile [passfile] "Sets a file to read password from (it's strongly preffered to use passcmd instead of this)")
+        .global(true)
+        .conflicts_with("passcmd"),
     )
     .arg(
       Arg::new("dryrun")
         .long("dry-run")
         .action(ArgAction::SetTrue)
+        .global(true)
         .help("Replace all morph commands with echo"),
+    )
+    // Subcommands
+    .subcommand(
+      Command::new("push")
+        .about("push out changes to hostgroup")
+        .arg(arg!(-l --list "lists test values").action(ArgAction::SetTrue)),
     )
 }
 

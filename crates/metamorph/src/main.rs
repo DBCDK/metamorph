@@ -43,8 +43,22 @@ async fn main() -> Result<(), Error> {
       .expect("failed to set DRY_RUN OnceLock to false");
   }
 
+  let mut args: Vec<String> = vec![];
+
+  if matches.get_flag("keepresults") {
+    args.push("--keep-results".into());
+  }
+
+  if let Some(passcmd) = matches.get_one::<String>("passcmd") {
+    args.push("--passcmd".into());
+    args.push(passcmd.clone());
+  } else if let Some(_passfile) = matches.get_one::<String>("passfile") {
+    // TODO: implement this in morph
+    todo!()
+  }
+
   match matches.subcommand() {
-    Some(("push", _sub_matches)) => morph::foreach_deploy_set(config, "push", [""]).await,
+    Some(("push", _sub_matches)) => morph::foreach_deploy_set(config, "push", args).await,
     Some(("reboot", _sub_matches)) => todo!(),
     Some(("boot", _sub_matches)) => todo!(),
     Some(("switch", _sub_matches)) => todo!(),
