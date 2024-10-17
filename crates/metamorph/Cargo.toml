@@ -16,6 +16,7 @@ clap_complete = "4.5.32"
 clap_mangen = "0.2.23"
 fast_log = "1.7.4"
 futures = "0.3.31"
+indicatif = { version = "0.17.8", features = ["tokio", "rayon", "futures"] }
 log = { version = "0.4.22", features = ["std", "kv_unstable"] }
 pretty_env_logger = "0.5.0"
 serde = { version = "1.0.210", features = ["derive", "serde_derive"] }

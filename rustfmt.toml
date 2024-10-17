@@ -3,3 +3,4 @@
 # SPDX-License-Identifier: EUPL-1.2
 
 tab_spaces = 2
+edition = "2024"
