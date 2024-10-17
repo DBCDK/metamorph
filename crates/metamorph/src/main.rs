@@ -45,10 +45,14 @@ async fn main() -> Result<(), Error> {
 
   let mut args: Vec<String> = vec![];
 
+  if matches.get_flag("keepresults") {
+    args.push("--keep-results".into());
+  }
+
   if let Some(passcmd) = matches.get_one::<String>("passcmd") {
     args.push("--passcmd".into());
     args.push(passcmd.clone());
-  } else if let Some(passfile) = matches.get_one::<String>("passfile") {
+  } else if let Some(_passfile) = matches.get_one::<String>("passfile") {
     // TODO: implement this in morph
     todo!()
   }
