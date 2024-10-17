@@ -48,6 +48,9 @@ async fn main() -> Result<(), Error> {
   if let Some(passcmd) = matches.get_one::<String>("passcmd") {
     args.push("--passcmd".into());
     args.push(passcmd.clone());
+  } else if let Some(passfile) = matches.get_one::<String>("passfile") {
+    // TODO: implement this in morph
+    todo!()
   }
 
   match matches.subcommand() {

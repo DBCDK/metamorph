@@ -14,7 +14,16 @@ pub fn build_cli() -> Command {
     // Global top-level args
     .arg(arg!(-c --config [config] "Specify config file").global(true))
     .arg(arg!(-v --verbose ... "Verbosity level.").global(true))
-    .arg(arg!(--passcmd [passcmd] "Set password manager command").global(true))
+    .arg(
+      arg!(--passcmd [passcmd] "Set password manager command")
+        .global(true)
+        .conflicts_with("passfile"),
+    )
+    .arg(
+      arg!(--passfile [passfile] "Sets a file to read password from (it's strongly preffered to use passcmd instead of this)")
+        .global(true)
+        .conflicts_with("passcmd"),
+    )
     .arg(
       Arg::new("dryrun")
         .long("dry-run")
