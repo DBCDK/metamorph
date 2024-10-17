@@ -36,8 +36,16 @@ pub fn build_cli() -> Command {
     // Subcommands
     .subcommand(
       Command::new("push")
-        .about("push out changes to hostgroup")
-        .arg(arg!(-l --list "lists test values").action(ArgAction::SetTrue)),
+        .about("Push closures to host")
+    )
+    .subcommand(
+      Command::new("switch")
+        .about("Push closures to host")
+    )
+    .subcommand(
+      Command::new("boot")
+        .about("Deploys boot entry without switching")
+        .arg(arg!(--reboot "Reboots hosts after creating new boot entry").action(ArgAction::SetTrue)),
     )
 }
 

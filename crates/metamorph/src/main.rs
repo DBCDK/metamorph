@@ -69,10 +69,14 @@ async fn main() -> Result<(), Error> {
   }
 
   match matches.subcommand() {
-    Some(("push", _sub_matches)) => morph::foreach_deploy_set(config, "push", args).await,
-    Some(("reboot", _sub_matches)) => todo!(),
-    Some(("boot", _sub_matches)) => todo!(),
-    Some(("switch", _sub_matches)) => todo!(),
+    Some(("push", _)) => morph::foreach_deploy_set(config, "push", args).await,
+    Some(("boot", sub_matches)) => {
+      if sub_matches.get_flag("reboot") {
+        args.push("--reboot".into());
+      };
+      morph::foreach_deploy_set(config, "boot", args).await;
+    }
+    Some(("switch", _)) => morph::foreach_deploy_set(config, "switch", args).await,
     _ => unreachable!("Exhausted list of subcommands and subcommand_required prevents `None`"),
   }
 
