@@ -77,7 +77,6 @@ const CONFIRMATION_NO: &str = "n";
 
 /// Pauses execution, awaiting user confirmation
 async fn get_confirmation() -> bool {
-  // use futures::prelude::*;
   use futures::StreamExt;
   use tokio::io::stdin;
   use tokio_util::codec::{FramedRead, LinesCodec};
@@ -87,14 +86,6 @@ async fn get_confirmation() -> bool {
   println!("Continue deploying (Y/n)");
 
   let mut input_buffer = reader.next().await.transpose().unwrap().unwrap();
-
-  //let mut input_buffer = String::new();
-  //let _ = stdout().flush();
-
-  // stdin()
-  //   .read_to_end(&mut input_buffer)
-  //   .await
-  //   .expect("couldn't read entry from stdin");
 
   // Normalize input
   input_buffer = input_buffer.to_lowercase();
