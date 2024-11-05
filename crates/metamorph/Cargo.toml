@@ -4,11 +4,11 @@
 
 [package]
 name = "metamorph"
+authors.workspace = true
 version.workspace = true
 edition.workspace = true
-license = "EUPL-1.2"
-author = "Christina Sørensen <christina@cafkakf.com"
-rust-version = "1.81"
+rust-version.workspace = true
+license.workspace = true
 
 [dependencies]
 clap = { version = "4.5.19", features = ["cargo"] }

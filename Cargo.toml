@@ -10,6 +10,8 @@ members = ["crates/*", "crates/workspace-hack"]
 version = "0.0.1"
 edition = "2021"
 rust-version = "1.80"
+authors = ["Christina Sørensen <christina@cafkakf.com"]
+license = "EUPL-1.2"
 
 [workspace.metadata.crane]
 name = "metamorph"
