@@ -148,7 +148,15 @@ where
     .into_iter()
     .map(|res| async {
       let res = res.unwrap().await.await.unwrap();
-      println!("{res:?}");
+      println!(
+        "{}: {}",
+        String::from_utf8(res.clone().stdout)
+          .unwrap()
+          .lines()
+          .next()
+          .unwrap(),
+        res.status
+      );
       res
     })
     .collect::<Vec<_>>();
