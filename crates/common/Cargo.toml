@@ -9,4 +9,7 @@ edition.workspace = true
 publish = false
 
 [dependencies]
+futures = "0.3.31"
+tokio = { version = "1.40.0", features = ["full"] }
+tokio-util = { version = "0.7.12", features = ["codec"] }
 workspace-hack = { version = "0.1", path = "../workspace-hack" }

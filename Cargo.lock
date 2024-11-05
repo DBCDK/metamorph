@@ -170,6 +170,9 @@ checksum = "d3fd119d74b830634cea2a0f58bbd0d54540518a14397557951e79340abc28c0"
 name = "common"
 version = "0.0.1"
 dependencies = [
+ "futures",
+ "tokio",
+ "tokio-util",
  "workspace-hack",
 ]
 
@@ -499,6 +502,7 @@ dependencies = [
  "clap",
  "clap_complete",
  "clap_mangen",
+ "common",
  "fast_log",
  "futures",
  "log",
