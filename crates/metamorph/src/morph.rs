@@ -119,7 +119,6 @@ where
 
   for deploy_set in config.deploy_sets {
     // Check if deploy set wants confirmation to proceed
-    // if true {
     if deploy_set.confirm {
       match get_confirmation().await {
         true => (),
