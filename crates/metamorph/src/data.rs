@@ -15,6 +15,9 @@ pub struct Config {
 pub struct DeploySet {
   pub order: u64,
   pub hosts: Vec<String>,
+  /// Whether or not to wait for user input before deploying set
+  #[serde(default)]
+  pub confirm: bool,
 }
 
 impl Config {
@@ -37,10 +40,12 @@ impl Config {
         DeploySet {
           order: 0,
           hosts: vec!["devp-stg".into(), "nixbuild-stg".into()],
+          ..Default::default()
         },
         DeploySet {
           order: 1,
           hosts: vec!["devp-prod".into(), "nixbuild-prod".into()],
+          confirm: true,
         },
       ],
     }

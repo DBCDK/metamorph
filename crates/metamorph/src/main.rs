@@ -38,10 +38,12 @@ async fn main() -> Result<(), Error> {
     DRY_RUN
       .set(true)
       .expect("failed to set DRY_RUN OnceLock to true");
+    log::debug!("DRY_RUN set to true");
   } else {
     DRY_RUN
       .set(false)
       .expect("failed to set DRY_RUN OnceLock to false");
+    log::debug!("DRY_RUN set to false");
   }
 
   if matches.get_flag("impure") {

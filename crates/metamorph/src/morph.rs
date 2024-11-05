@@ -6,9 +6,7 @@
 
 use futures::future::join_all;
 use futures::Future;
-use indicatif::{MultiProgress, ProgressBar};
 use std::process::Output;
-use std::time::Duration;
 use std::{
   collections::{BTreeMap, BTreeSet},
   ffi::OsStr,
@@ -74,22 +72,70 @@ where
     .collect()
 }
 
+const CONFIRMATION_YES: &str = "y";
+const CONFIRMATION_NO: &str = "n";
+
+/// Pauses execution, awaiting user confirmation
+async fn get_confirmation() -> bool {
+  // use futures::prelude::*;
+  use futures::StreamExt;
+  use tokio::io::stdin;
+  use tokio_util::codec::{FramedRead, LinesCodec};
+
+  let mut reader = FramedRead::new(stdin(), LinesCodec::new());
+
+  println!("Continue deploying (Y/n)");
+
+  let mut input_buffer = reader.next().await.transpose().unwrap().unwrap();
+
+  //let mut input_buffer = String::new();
+  //let _ = stdout().flush();
+
+  // stdin()
+  //   .read_to_end(&mut input_buffer)
+  //   .await
+  //   .expect("couldn't read entry from stdin");
+
+  // Normalize input
+  input_buffer = input_buffer.to_lowercase();
+
+  // Remove newline/return from input
+  if let Some('\n') = input_buffer.chars().next_back() {
+    input_buffer.pop();
+  }
+  if let Some('\r') = input_buffer.chars().next_back() {
+    input_buffer.pop();
+  }
+
+  match input_buffer.as_str() {
+    CONFIRMATION_YES => true,
+    CONFIRMATION_NO => false,
+    _ => {
+      println!("Please answer before continuing");
+      Box::pin(get_confirmation()).await
+    }
+  }
+}
+
 pub async fn foreach_deploy_set<I, S>(config: Config, action: &'static str, args: I)
 where
   I: IntoIterator<Item = S> + std::marker::Send + Clone + 'static,
   S: AsRef<OsStr> + 'static,
 {
-  let bars = MultiProgress::new();
   let mut jobs: BTreeMap<Order, Vec<JoinHandle<_>>> = BTreeMap::new();
 
   let mut seen_orderings: BTreeSet<Order> = BTreeSet::new();
 
   for deploy_set in config.deploy_sets {
-    bars.add({
-      let pb = ProgressBar::new_spinner();
-      pb.enable_steady_tick(Duration::from_millis(100));
-      pb
-    });
+    // Check if deploy set wants confirmation to proceed
+    // if true {
+    if deploy_set.confirm {
+      match get_confirmation().await {
+        true => (),
+        false => std::process::exit(0),
+      }
+    }
+
     jobs.entry(deploy_set.order).or_insert_with(|| {
       seen_orderings.insert(deploy_set.order);
       vec![]

@@ -16,12 +16,12 @@ clap_complete = "4.5.32"
 clap_mangen = "0.2.23"
 fast_log = "1.7.4"
 futures = "0.3.31"
-indicatif = { version = "0.17.8", features = ["tokio", "rayon", "futures"] }
 log = { version = "0.4.22", features = ["std", "kv_unstable"] }
 pretty_env_logger = "0.5.0"
 serde = { version = "1.0.210", features = ["derive", "serde_derive"] }
 serde_norway = "0.9.38"
 tokio = { version = "1.40.0", features = ["full"] }
+tokio-util = { version = "0.7.12", features = ["codec"] }
 workspace-hack = { version = "0.1", path = "../workspace-hack" }
 
 [build-dependencies]
