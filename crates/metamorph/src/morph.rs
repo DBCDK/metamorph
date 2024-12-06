@@ -112,6 +112,7 @@ where
     .into_iter()
     .map(|res| async {
       let res = res.unwrap().await.await.unwrap();
+      log::debug!("{:?}", res.clone());
       println!(
         "{}: {}",
         String::from_utf8(res.clone().stdout)
